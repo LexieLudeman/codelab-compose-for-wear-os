@@ -39,6 +39,7 @@ import androidx.wear.compose.material.TimeText
 import androidx.wear.compose.material.Vignette
 import androidx.wear.compose.material.VignettePosition
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
+import androidx.wear.compose.material.scrollAway
 import androidx.wear.compose.ui.tooling.preview.WearPreviewDevices
 import com.example.android.wearable.composeforwearos.theme.WearAppTheme
 
@@ -68,19 +69,33 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun WearApp() {
     WearAppTheme {
-        // TODO: Swap to ScalingLazyListState
-        val listState = rememberLazyListState()
+        val listState = rememberScalingLazyListState()
 
         /* *************************** Part 4: Wear OS Scaffold *************************** */
-        // TODO (Start): Create a Scaffold (Wear Version)
+        Scaffold(
+            timeText = {
+                TimeText(modifier = Modifier.scrollAway(listState))
+            },
+            vignette = {
+                Vignette(vignettePosition = VignettePosition.TopAndBottom)
+            },
+            positionIndicator = {
+                PositionIndicator(
+                    scalingLazyListState = listState
+                )
+            }
+        ) {
 
             // Modifiers used by our Wear composables.
-            val contentModifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
-            val iconModifier = Modifier.size(24.dp).wrapContentSize(align = Alignment.Center)
+            val contentModifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp)
+            val iconModifier = Modifier
+                .size(24.dp)
+                .wrapContentSize(align = Alignment.Center)
 
             /* *************************** Part 3: ScalingLazyColumn *************************** */
-            // TODO: Swap a ScalingLazyColumn (Wear's version of LazyColumn)
-            LazyColumn(
+            ScalingLazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(
                     top = 32.dp,
@@ -92,9 +107,6 @@ fun WearApp() {
                 state = listState
             ) {
 
-                // TODO: Remove item; for beginning only.
-                item { StartOnlyTextComposables() }
-
                 /* ******************* Part 1: Simple composables ******************* */
                 item { ButtonExample(contentModifier, iconModifier) }
                 item { TextExample(contentModifier) }
@@ -104,8 +116,7 @@ fun WearApp() {
                 item { ChipExample(contentModifier, iconModifier) }
                 item { ToggleChipExample(contentModifier) }
             }
-
-        // TODO (End): Create a Scaffold (Wear Version)
+        }
 
     }
 }
